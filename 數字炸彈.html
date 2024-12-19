@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>數字炸彈遊戲</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            text-align: center;
+        }
+        .game-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .game-container h1 {
+            margin-bottom: 20px;
+        }
+        .game-container input, .game-container button {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .game-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .game-container button:hover {
+            background-color: #45a049;
+        }
+        .message, .range-info {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>數字炸彈遊戲</h1>
+        <p>猜一個範圍內的數字，直到找到目標數字！</p>
+        <div class="range-info" id="rangeInfo">
+            範圍：1 到 100
+        </div>
+        <input type="number" id="guessInput" placeholder="輸入你的猜測" min="1" max="100">
+        <button onclick="makeGuess()">猜測</button>
+        <div class="message" id="message">
+            <!-- 遊戲訊息會顯示在這裡 -->
+        </div>
+    </div>
+
+    <script>
+        // 遊戲狀態
+        let minRange = 1;
+        let maxRange = 100;
+        const targetNumber = Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange;
+
+        // 更新範圍顯示
+        function updateRangeInfo() {
+            const rangeInfo = document.getElementById('rangeInfo');
+            rangeInfo.textContent = `範圍：${minRange} 到 ${maxRange}`;
+        }
+
+        // 猜測數字
+        function makeGuess() {
+            const guessInput = document.getElementById('guessInput');
+            const message = document.getElementById('message');
+            const guess = parseInt(guessInput.value);
+
+            // 驗證輸入
+            if (isNaN(guess) || guess < minRange || guess > maxRange) {
+                message.style.color = 'red';
+                message.textContent = '請輸入有效的數字！';
+                return;
+            }
+
+            // 判斷結果
+            if (guess < targetNumber) {
+                minRange = guess + 1;
+                message.style.color = 'blue';
+                message.textContent = '更大！';
+            } else if (guess > targetNumber) {
+                maxRange = guess - 1;
+                message.style.color = 'blue';
+                message.textContent = '更小！';
+            } else {
+                message.style.color = 'green';
+                message.textContent = `恭喜！你找到目標數字：${targetNumber}`;
+                document.getElementById('guessInput').disabled = true;
+                return;
+            }
+
+            // 更新範圍和清空輸入框
+            updateRangeInfo();
+            guessInput.value = '';
+        }
+
+        // 初始化
+        updateRangeInfo();
+    </script>
+</body>
+</html>
